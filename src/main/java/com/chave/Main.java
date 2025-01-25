@@ -3,8 +3,8 @@ package com.chave;
 import burp.api.montoya.BurpExtension;
 import burp.api.montoya.MontoyaApi;
 import burp.api.montoya.logging.Logging;
-import com.chave.http.HTTP;
-import com.chave.ui.UIMain;
+import com.chave.handler.APIHighLighterHandler;
+import com.chave.ui.MainUI;
 
 public class Main implements BurpExtension {
 
@@ -19,8 +19,8 @@ public class Main implements BurpExtension {
         log.logToOutput("Hello World");
 
         // 初始化ui
-        UIMain ui = new UIMain(montoyaApi);
+        MainUI ui = new MainUI(montoyaApi);
         API.userInterface().registerSuiteTab("API Highlighter", ui.getRoot());
-        API.http().registerHttpHandler(new HTTP(montoyaApi));
+        API.http().registerHttpHandler(new APIHighLighterHandler(montoyaApi));
     }
 }

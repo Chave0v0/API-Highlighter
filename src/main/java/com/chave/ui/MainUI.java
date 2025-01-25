@@ -6,10 +6,10 @@ import lombok.Data;
 import javax.swing.*;
 
 @Data
-public class UIMain {
+public class MainUI {
     private JPanel root;
 
-    public UIMain(MontoyaApi api) {
+    public MainUI(MontoyaApi api) {
         this.root = new JPanel();
     }
 }
