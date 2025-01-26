@@ -11,7 +11,7 @@ public class APIConfig {
 
     // 初始化一些测试数据
     static {
-        TARGET_API.add(new APIItem("GET", "/test"));
+        TARGET_API.add(new APIItem("GET", "/api/v1/info"));
         TARGET_API.add(new APIItem("GET", "/api/v1/{id}/info"));
         TARGET_API.add(new APIItem("GET", "/api/v1/{id}/product/{name}"));
     }

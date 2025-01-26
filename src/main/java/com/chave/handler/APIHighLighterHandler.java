@@ -16,7 +16,7 @@ public class APIHighLighterHandler implements HttpHandler {
     public APIHighLighterHandler(MontoyaApi api) {
         this.api = api;
         this.log = api.logging();
-        this.apiMatchService = new APIMatchService();
+        this.apiMatchService = new APIMatchService(api);
     }
 
     @Override
