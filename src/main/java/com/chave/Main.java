@@ -20,7 +20,7 @@ public class Main implements BurpExtension {
 
         // 初始化ui
         MainUI ui = new MainUI(montoyaApi);
-        API.userInterface().registerSuiteTab("API Highlighter", ui.getRoot());
+        API.userInterface().registerSuiteTab("API Highlighter", ui.getMainPanel());
         API.http().registerHttpHandler(new APIHighLighterHandler(montoyaApi));
     }
 }
