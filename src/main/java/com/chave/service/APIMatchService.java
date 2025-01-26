@@ -2,18 +2,31 @@ package com.chave.service;
 
 import burp.api.montoya.http.handler.HttpRequestToBeSent;
 import com.chave.config.APIConfig;
+import com.chave.pojo.APIItem;
+import com.chave.utils.Util;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class APIMatchService {
+    // 精确匹配
     public boolean exactMatch(HttpRequestToBeSent requestToBeSent) {
-        // 处理不涉及 PathVariable 的情况
-        if (APIConfig.TARGET_API.get(requestToBeSent.path()) != null) {
-            return true;
+        boolean isMatched = false;
+        for (APIItem apiItem : APIConfig.TARGET_API) {
+            // 处理不没有 PathVariable 的情况
+            if (apiItem.getPath() == requestToBeSent.path()) {
+                isMatched = true;
+            } else {
+                // 处理有 PathVariable 的情况
+                Pattern pattern = Pattern.compile("^" + Util.convertPathToRegex(apiItem.getPath()) + "$");
+                Matcher matcher = pattern.matcher(requestToBeSent.path());
+                if (isMatched = matcher.matches()) {
+                    break;
+                }
+            }
         }
 
-        // 处理 PathVariable 的情况
-        // ......
-
-        return false;
+        return isMatched;
     }
 
 

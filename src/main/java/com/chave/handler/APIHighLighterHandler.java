@@ -1,20 +1,19 @@
-package com.chave.http;
+package com.chave.handler;
 
 import burp.api.montoya.MontoyaApi;
 import burp.api.montoya.http.handler.*;
 import burp.api.montoya.logging.Logging;
 import com.chave.config.UserConfig;
 import com.chave.service.APIMatchService;
-import lombok.extern.java.Log;
 
 import java.lang.reflect.Method;
 
-public class HTTP implements HttpHandler {
+public class APIHighLighterHandler implements HttpHandler {
     private MontoyaApi api;
     private Logging log;
     private APIMatchService apiMatchService;
 
-    public HTTP(MontoyaApi api) {
+    public APIHighLighterHandler(MontoyaApi api) {
         this.api = api;
         this.log = api.logging();
         this.apiMatchService = new APIMatchService();

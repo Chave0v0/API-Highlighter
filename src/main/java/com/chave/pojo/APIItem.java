@@ -10,12 +10,16 @@ import java.net.URL;
 @NoArgsConstructor
 @AllArgsConstructor
 public class APIItem {
-    private String method;
+    private String method = null;
     private String path;
     private String result;
     private Boolean state = Boolean.FALSE;
     private String note;
-    private URL domain;
+    private String domain;
+
+    public APIItem(String path) {
+        this.path = path;
+    }
 
     public APIItem(String method, String path) {
         this.method = method;
