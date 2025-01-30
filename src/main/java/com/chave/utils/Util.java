@@ -5,7 +5,6 @@ import burp.api.montoya.internal.ObjectFactoryLocator;
 import com.chave.Main;
 import com.chave.config.APIConfig;
 import com.chave.pojo.APIItem;
-
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

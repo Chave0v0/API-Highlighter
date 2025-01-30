@@ -1,13 +1,7 @@
 package com.chave.config;
 
-import burp.api.montoya.MontoyaApi;
 import com.chave.pojo.APIItem;
-import lombok.SneakyThrows;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 public class APIConfig {

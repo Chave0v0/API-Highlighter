@@ -1,9 +1,7 @@
 package com.chave.ui;
 
 import burp.api.montoya.MontoyaApi;
-import burp.api.montoya.http.handler.HttpRequestToBeSent;
 import burp.api.montoya.http.message.requests.HttpRequest;
-import burp.api.montoya.internal.ObjectFactoryLocator;
 import burp.api.montoya.logging.Logging;
 import burp.api.montoya.proxy.ProxyHttpRequestResponse;
 import com.chave.Main;
@@ -13,24 +11,17 @@ import com.chave.pojo.APIItem;
 import com.chave.pojo.MatchMod;
 import com.chave.service.APIMatchService;
 import com.chave.utils.Util;
-import jdk.jshell.Snippet;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.module.FindException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Data
 public class MainUI {
