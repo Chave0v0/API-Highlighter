@@ -56,11 +56,5 @@
             <version>1.18.30</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version> <!-- 选择适合的版本 -->
-        </dependency>
-
     </dependencies>
 </project>
