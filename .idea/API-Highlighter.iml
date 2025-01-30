@@ -13,6 +13,5 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: net.portswigger.burp.extensions:montoya-api:2024.7" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.30" level="project" />
-    <orderEntry type="library" name="Maven: com.jgoodies:forms:1.2.1" level="project" />
   </component>
 </module>

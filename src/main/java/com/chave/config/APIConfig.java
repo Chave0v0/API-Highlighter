@@ -1,18 +1,21 @@
 package com.chave.config;
 
 import com.chave.pojo.APIItem;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class APIConfig {
     public static ArrayList<APIItem> TARGET_API = new ArrayList<>();
-    public static ArrayList<String> USER_INPUT_API = new ArrayList<>();
 
-    // 初始化一些测试数据
+    public static final HashMap ITEM_FIELD = new HashMap();
+
     static {
-        TARGET_API.add(new APIItem("GET", "/test"));
-        TARGET_API.add(new APIItem("GET", "/api/v1/{id}/info"));
-        TARGET_API.add(new APIItem("GET", "/api/v1/{id}/product/{name}"));
+        ITEM_FIELD.put(0, "method");
+        ITEM_FIELD.put(1, "path");
+        ITEM_FIELD.put(2, "result");
+        ITEM_FIELD.put(3, "state");
+        ITEM_FIELD.put(4, "note");
+        ITEM_FIELD.put(5, "domain");
     }
+
 }
