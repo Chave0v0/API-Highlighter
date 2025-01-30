@@ -57,9 +57,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>forms</artifactId>
-            <version>1.2.1</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version> <!-- 选择适合的版本 -->
         </dependency>
 
     </dependencies>
