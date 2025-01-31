@@ -16,8 +16,8 @@ public class Main implements BurpExtension {
         Logging log = API.logging();
 
         API.extension().setName("API Highlighter");
-        log.logToOutput("API Highlighter v1.0.0\n" +
-                "Rebuild: Chave" +
+        log.logToOutput("API Highlighter v1.0.0\n\n" +
+                "Rebuild: Chave\n" +
                 "GitHub: https://github.com/Chave0v0/API-Highlighter");
 
         // 初始化ui
