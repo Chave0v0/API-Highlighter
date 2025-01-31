@@ -16,7 +16,9 @@ public class Main implements BurpExtension {
         Logging log = API.logging();
 
         API.extension().setName("API Highlighter");
-        log.logToOutput("Hello World");
+        log.logToOutput("API Highlighter v1.0.0\n" +
+                "Rebuild: Chave" +
+                "GitHub: https://github.com/Chave0v0/API-Highlighter");
 
         // 初始化ui
         MainUI ui = new MainUI(montoyaApi);
