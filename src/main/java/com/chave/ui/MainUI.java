@@ -44,7 +44,7 @@ public class MainUI {
         JButton checkHistoryButton;
         JButton apiSearchButton;
         JComboBox<String> matchModComboBox;
-        JCheckBox urlencodeCheckBox;
+        JCheckBox urldecodeCheckBox;
         JCheckBox checkEntireReqCheckBox;
         JCheckBox checkMethodCheckBox;
         JTable apiTable;
@@ -85,9 +85,9 @@ public class MainUI {
         matchModComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
         matchModComboBox.setAlignmentY(Component.CENTER_ALIGNMENT);
         matchModComboBox.setSelectedIndex(0);  // 默认选择精确匹配
-        // 创建复选框启用URL编码
-        urlencodeCheckBox = new JCheckBox("启用URL编码");
-        urlencodeCheckBox.setEnabled(false);  // 默认是精确匹配，初始化禁用
+        // 创建复选框启用URL解码
+        urldecodeCheckBox = new JCheckBox("启用URL解码");
+        urldecodeCheckBox.setEnabled(false);  // 默认是精确匹配，初始化禁用
         // 创建复选框检查完整数据包
         checkEntireReqCheckBox = new JCheckBox("检查完整数据包");
         checkEntireReqCheckBox.setEnabled(false); // 默认是精确匹配，初始化禁用
@@ -105,7 +105,7 @@ public class MainUI {
         userOperationPanel.add(Box.createHorizontalStrut(20));
         userOperationPanel.add(matchModComboBox);
         userOperationPanel.add(Box.createHorizontalStrut(20));
-        userOperationPanel.add(urlencodeCheckBox);
+        userOperationPanel.add(urldecodeCheckBox);
         userOperationPanel.add(Box.createHorizontalStrut(20));
         userOperationPanel.add(checkEntireReqCheckBox);
         userOperationPanel.add(Box.createHorizontalStrut(20));
@@ -253,37 +253,37 @@ public class MainUI {
 
                 if ("精确匹配".equals(selectedOption)) {
                     UserConfig.MATCH_MOD = MatchMod.exactMatch;
-                    // 不支持开启url编码
-                    urlencodeCheckBox.setEnabled(false);
-                    urlencodeCheckBox.setSelected(false);
+                    // 不支持开启url解码
+                    urldecodeCheckBox.setEnabled(false);
+                    urldecodeCheckBox.setSelected(false);
                     // 不支持检查完整数据包
                     checkEntireReqCheckBox.setEnabled(false);
                     checkEntireReqCheckBox.setSelected(false);
                     // 每次切换匹配模式均初始化配置为false
-                    UserConfig.IS_URL_ENCODE = Boolean.FALSE;
+                    UserConfig.IS_URL_DECODE = Boolean.FALSE;
                     UserConfig.IS_CHECK_ENTIRE_REQUEST = Boolean.FALSE;
                     UserConfig.IS_CHECK_HTTP_METHOD = Boolean.FALSE;
                 } else if ("半模糊匹配".equals(selectedOption)) {
                     UserConfig.MATCH_MOD = MatchMod.semiFuzzMatch;
-                    // 不支持开启url编码
-                    urlencodeCheckBox.setEnabled(false);
-                    urlencodeCheckBox.setSelected(false);
+                    // 不支持开启url解码
+                    urldecodeCheckBox.setEnabled(false);
+                    urldecodeCheckBox.setSelected(false);
                     // 不支持检查完整数据包
                     checkEntireReqCheckBox.setEnabled(false);
                     // 每次切换匹配模式均初始化配置为false
-                    UserConfig.IS_URL_ENCODE = Boolean.FALSE;
+                    UserConfig.IS_URL_DECODE = Boolean.FALSE;
                     UserConfig.IS_CHECK_ENTIRE_REQUEST = Boolean.FALSE;
                     UserConfig.IS_CHECK_HTTP_METHOD = Boolean.FALSE;
                 } else if ("模糊匹配".equals(selectedOption)) {
                     UserConfig.MATCH_MOD = MatchMod.fuzzMatch;
-                    // 不支持开启url编码
-                    urlencodeCheckBox.setEnabled(true);
-                    urlencodeCheckBox.setSelected(false);
+                    // 不支持开启url解码
+                    urldecodeCheckBox.setEnabled(true);
+                    urldecodeCheckBox.setSelected(false);
                     // 不支持检查完整数据包
                     checkEntireReqCheckBox.setEnabled(true);
                     checkEntireReqCheckBox.setSelected(false);
                     // 每次切换匹配模式均初始化配置为false  是否解析路径参数除外
-                    UserConfig.IS_URL_ENCODE = Boolean.FALSE;
+                    UserConfig.IS_URL_DECODE = Boolean.FALSE;
                     UserConfig.IS_CHECK_ENTIRE_REQUEST = Boolean.FALSE;
                     UserConfig.IS_CHECK_HTTP_METHOD = Boolean.FALSE;
 
@@ -302,7 +302,7 @@ public class MainUI {
                     int eventType = e.getType();
                     int rowNumber = e.getLastRow();
                     int columnNumber = e.getColumn();
-                    String value = (String) model.getValueAt(rowNumber, columnNumber);
+                    String value = ((String) model.getValueAt(rowNumber, columnNumber)).trim();
 
                     // 同步修改ArrayList中的对象
                     if (eventType == TableModelEvent.UPDATE) {
@@ -344,14 +344,14 @@ public class MainUI {
         });
 
 
-        // 添加url编码复选框监听器
-        urlencodeCheckBox.addItemListener(new ItemListener() {
+        // 添加url解码复选框监听器
+        urldecodeCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    UserConfig.IS_URL_ENCODE = Boolean.TRUE;
+                    UserConfig.IS_URL_DECODE = Boolean.TRUE;
                 } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    UserConfig.IS_URL_ENCODE = Boolean.FALSE;
+                    UserConfig.IS_URL_DECODE = Boolean.FALSE;
                 }
             }
         });
@@ -448,7 +448,7 @@ public class MainUI {
             public void actionPerformed(ActionEvent e) {
                 String searchAPI = apiSearchTextField.getText();
                 // 先去除前后空格
-                searchAPI = searchAPI.trim();
+                searchAPI = searchAPI.trim().toLowerCase();
                 // 先去除目前所有的选中状态
                 apiTable.clearSelection();
                 // 支持精确匹配

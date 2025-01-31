@@ -138,7 +138,7 @@ public class APIMatchService {
                 String requestData = request.toString();
 
                 // 如果开启url编码 先对request进行解码
-                if (UserConfig.IS_URL_ENCODE) {
+                if (UserConfig.IS_URL_DECODE) {
                     requestData = Util.urlDecode(requestData);
                 }
 
@@ -161,7 +161,7 @@ public class APIMatchService {
                 // 默认情况下匹配path+参数  模糊匹配包含匹配参数 无需处理
                 String path = request.path();
 
-                if (UserConfig.IS_URL_ENCODE) {
+                if (UserConfig.IS_URL_DECODE) {
                     // 处理开启url编码情况  先对path进行url解码
                     path = Util.urlDecode(path);
                 }
