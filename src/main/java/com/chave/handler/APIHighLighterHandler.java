@@ -23,14 +23,10 @@ public class APIHighLighterHandler implements HttpHandler {
         try {
             Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
             if ((Boolean) matchMethod.invoke(apiMatchService, requestToBeSent)) {
-                // 处理匹配到的逻辑
-                log.logToOutput("匹配到接口：" + requestToBeSent.path());
-
                 // 匹配到进行高亮处理
                 Util.setHighlightColor(requestToBeSent, com.chave.config.Color.YELLOW);
 
-
-                // 后续这里可以添加HaE匹配规则
+                // 只对匹配到的接口进行敏感信息检查
 
             }
 
