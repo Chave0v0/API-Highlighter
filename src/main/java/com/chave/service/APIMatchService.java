@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class APIMatchService {
+    public static APIItem MATCHED_ITEM;
     private Logging log;
 
 
@@ -24,6 +25,7 @@ public class APIMatchService {
     // 不支持检查完整数据包
     // 支持检查Method
     public boolean exactMatch(HttpRequest request) {
+
         boolean isMatched = false;
         String path = request.path();
         // 当有get参数时 去除参数部分
@@ -32,6 +34,9 @@ public class APIMatchService {
         }
 
         for (APIItem apiItem : APIConfig.TARGET_API) {
+            // 每次循环先赋值 便于找到匹配到的item位置
+            MATCHED_ITEM = apiItem;
+
             // 如果测试状态是true(已测试状态)  则不再进行匹配
             if (apiItem.getState()) {
                 continue;
@@ -79,6 +84,9 @@ public class APIMatchService {
             path = path.split("\\?", 2)[0];
         }
         for (APIItem apiItem : APIConfig.TARGET_API) {
+            // 每次循环先赋值 便于找到匹配到的item位置
+            MATCHED_ITEM = apiItem;
+
             // 如果测试状态是true(已测试状态)  则不再进行匹配
             if (apiItem.getState()) {
                 continue;
@@ -121,6 +129,9 @@ public class APIMatchService {
         Pattern pattern = null;
 
         for (APIItem apiItem : APIConfig.TARGET_API) {
+            // 每次循环先赋值 便于找到匹配到的item位置
+            MATCHED_ITEM = apiItem;
+
             // 如果测试状态是true(已测试状态)  则不再进行匹配
             if (apiItem.getState()) {
                 continue;

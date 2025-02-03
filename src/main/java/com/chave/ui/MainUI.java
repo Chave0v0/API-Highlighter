@@ -12,6 +12,8 @@ import javax.swing.*;
 public class MainUI {
     private JTabbedPane mainTabbedPane = new JTabbedPane();
     private Logging log;
+    private HighlighterUI highlighterUI;
+    private SensitiveInfoUI sensitiveInfoUI;
 
     public MainUI() {
         this.log = Main.API.logging();
@@ -20,8 +22,8 @@ public class MainUI {
 
     private void initUI() {
         // 创建各个组件ui实例
-        HighlighterUI highlighterUI = new HighlighterUI();
-        SensitiveInfoUI sensitiveInfoUI = new SensitiveInfoUI();
+        highlighterUI = new HighlighterUI();
+        sensitiveInfoUI = new SensitiveInfoUI();
 
         mainTabbedPane.add("Highlighter", highlighterUI.getHighlighterPanel());  // 添加高亮功能ui
         mainTabbedPane.add("Sensitive Info", sensitiveInfoUI.getSensitiveInfoPanel());  // 添加敏感信息检查功能ui

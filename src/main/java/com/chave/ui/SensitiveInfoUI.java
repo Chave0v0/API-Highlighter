@@ -128,7 +128,6 @@ public class SensitiveInfoUI {
         ruleTable.getColumnModel().getColumn(1).setMinWidth(200);
         ruleTable.getColumnModel().getColumn(3).setMaxWidth(150);
         ruleTable.getColumnModel().getColumn(3).setMinWidth(150);
-        // 设置第一列与第四列居中对齐
         // 设置第一列（索引0）和第四列（索引3）数据居中对齐
         TableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         ((DefaultTableCellRenderer) centerRenderer).setHorizontalAlignment(SwingConstants.CENTER);

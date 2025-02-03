@@ -1,6 +1,7 @@
 package com.chave.ui;
 
 import burp.api.montoya.http.message.requests.HttpRequest;
+import burp.api.montoya.http.message.responses.HttpResponse;
 import burp.api.montoya.logging.Logging;
 import burp.api.montoya.proxy.ProxyHttpRequestResponse;
 import com.chave.Main;
@@ -9,18 +10,23 @@ import com.chave.config.UserConfig;
 import com.chave.pojo.APIItem;
 import com.chave.pojo.MatchMod;
 import com.chave.service.APIMatchService;
+import com.chave.service.SensitiveInfoMatchService;
 import com.chave.utils.Util;
 import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.EventObject;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -128,6 +134,19 @@ public class HighlighterUI {
         };
         apiTable = new JTable(model);
         apiTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  // 支持不连续的多行选择
+        // 禁止第二列表格编辑
+        DefaultCellEditor disabledEditor = new DefaultCellEditor(new JTextField()) {
+            @Override
+            public boolean isCellEditable(EventObject anEvent) {
+                return false;
+            }
+        };
+        apiTable.getColumnModel().getColumn(2).setCellEditor(disabledEditor);
+        // 设置第一列（索引0）和第四列（索引3）数据居中对齐
+        TableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        ((DefaultTableCellRenderer) centerRenderer).setHorizontalAlignment(SwingConstants.CENTER);
+        apiTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        apiTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         // 设置表头背景
         JTableHeader apiTableHeader = apiTable.getTableHeader();
         apiTableHeader.setBackground(new Color(215, 215, 215));
@@ -231,7 +250,7 @@ public class HighlighterUI {
                 try {
                     // 导入之后清空输入面板 清空当前列表刷新
                     userInputTextArea.setText("");
-                    Util.flushAPIList(model);
+                    Util.flushAPIList(apiTable);
                 } catch (Exception exception) {
                     System.out.println(exception);
                 }
@@ -326,7 +345,7 @@ public class HighlighterUI {
                         }
 
                         // 修改之后刷新列表  防止数据不一致
-                        Util.flushAPIList(model);
+                        Util.flushAPIList(apiTable);
 
                     }
                 } catch (ArrayIndexOutOfBoundsException arrayIndexOutOfBoundsException) {
@@ -384,11 +403,13 @@ public class HighlighterUI {
             public void actionPerformed(ActionEvent e) {
                 // 获取匹配service用于检查
                 APIMatchService apiMatchService = new APIMatchService();
+                SensitiveInfoMatchService sensitiveInfoMatchService = new SensitiveInfoMatchService();
                 // 获取所有history
                 List<ProxyHttpRequestResponse> historyList = Main.API.proxy().history();
                 for (ProxyHttpRequestResponse proxyHttpRequestResponse : historyList) {
-                    // 仅检查request
+                    // 获取要检查的request和response
                     HttpRequest request = proxyHttpRequestResponse.request();
+                    HttpResponse response = proxyHttpRequestResponse.response();
                     // 遍历检查
                     try {
                         Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
@@ -399,7 +420,22 @@ public class HighlighterUI {
                             Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.YELLOW);
 
                             // 后续这里可以添加HaE规则
+                            // 只对匹配到的接口进行敏感信息检查
+                            HashMap requestResult = sensitiveInfoMatchService.sensitiveInfoMatch(request);
+                            HashMap responseResult = sensitiveInfoMatchService.sensitiveInfoMatch(response);
+                            if (!requestResult.isEmpty() || !responseResult.isEmpty()) {
+                                // 对history进行红色高亮处理
+                                Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.RED);
 
+                                if (APIMatchService.MATCHED_ITEM.getResult() != null && !APIMatchService.MATCHED_ITEM.getResult().contains("敏感信息")) {
+                                    APIMatchService.MATCHED_ITEM.setResult(APIMatchService.MATCHED_ITEM.getResult() + "/存在敏感信息");
+                                } else {
+                                    APIMatchService.MATCHED_ITEM.setResult("存在敏感信息");
+                                }
+
+                                // 刷新列表
+                                Util.flushAPIList(Main.UI.getHighlighterUI().getApiTable());
+                            }
                         } else {
                             // 检查后如果没匹配到直接去除高亮
                             Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.NONE);
@@ -432,7 +468,7 @@ public class HighlighterUI {
                     }
 
                     // 修改之后刷新列表  防止数据不一致
-                    Util.flushAPIList(model);
+                    Util.flushAPIList(apiTable);
                 }
             }
         });
@@ -549,7 +585,7 @@ public class HighlighterUI {
                 }
 
                 // 刷新列表
-                Util.flushAPIList(model);
+                Util.flushAPIList(apiTable);
             }
         });
     }
