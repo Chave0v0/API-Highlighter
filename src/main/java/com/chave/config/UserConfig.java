@@ -8,4 +8,5 @@ public class UserConfig {
     public static Boolean IS_CHECK_ENTIRE_REQUEST = Boolean.FALSE;
     public static Boolean IS_CHECK_HTTP_METHOD = Boolean.FALSE;
     public static Boolean IS_ANALYZE_PATHVARIABLE = Boolean.FALSE;
+
 }
