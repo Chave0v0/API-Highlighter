@@ -2,6 +2,7 @@ package com.chave.ui;
 
 import burp.api.montoya.logging.Logging;
 import com.chave.Main;
+import com.chave.config.APIConfig;
 import com.chave.config.SensitiveInfoConfig;
 import com.chave.pojo.RuleItem;
 import com.chave.utils.Util;
@@ -245,12 +246,12 @@ public class SensitiveInfoMainUI {
             JComboBox scopeComboBox = new JComboBox(scopeOptions);
 
             // 调整组件大小
-            nameTextField.setMinimumSize(new Dimension(300, 25));
-            nameTextField.setMaximumSize(new Dimension(300, 25));
-            regexTextField.setMinimumSize(new Dimension(300, 25));
-            regexTextField.setMaximumSize(new Dimension(300, 25));
-            scopeComboBox.setMaximumSize(new Dimension(300, 25));
-            scopeComboBox.setMaximumSize(new Dimension(300, 25));
+//            nameTextField.setMinimumSize(new Dimension(300, 25));
+//            nameTextField.setMaximumSize(new Dimension(300, 25));
+//            regexTextField.setMinimumSize(new Dimension(300, 25));
+//            regexTextField.setMaximumSize(new Dimension(300, 25));
+//            scopeComboBox.setMinimumSize(new Dimension(300, 25));
+//            scopeComboBox.setMaximumSize(new Dimension(300, 25));
 
             // 设置布局
             BoxLayout addRuleMainLayout = new BoxLayout(operateRuleMainPanel, BoxLayout.Y_AXIS);
@@ -275,6 +276,7 @@ public class SensitiveInfoMainUI {
             operateRuleMainPanel.add(regexPanel);
             operateRuleMainPanel.add(Box.createVerticalStrut(10));
             operateRuleMainPanel.add(scopePanel);
+
 
             int option = 0;
             if (operation.equals("add")) {
@@ -320,10 +322,16 @@ public class SensitiveInfoMainUI {
                     ruleItem.setRegex(regexTextField.getText());
                     ruleItem.setScope((String) scopeComboBox.getSelectedItem());
                 } else if (operation.equals("remove")) {
-                    int selectedRow = ruleTable.getSelectedRows()[0];  // 如果同时选择多行 只取第一个
-
-                    // 删除规则
-                    SensitiveInfoConfig.RULE_LIST.remove(selectedRow);
+                    int[] selectedRows = ruleTable.getSelectedRows();
+                    // 如果有选中的行
+                    if (selectedRows.length > 0) {
+                        // 由于删除行时会影响索引，所以需要倒序删除
+                        for (int i = selectedRows.length - 1; i >= 0; i--) {
+                            int row = selectedRows[i];
+                            // 删除选中的行
+                            SensitiveInfoConfig.RULE_LIST.remove(row);
+                        }
+                    }
                 } else if (operation.equals("changeState")) {
                     // 支持多行同时修改
                     int[] selectedRows = ruleTable.getSelectedRows();
