@@ -191,23 +191,23 @@ Java 版本不仅更好地与 BurpSuite 环境集成，而且通过减少第三�
 
 首次安装插件时，会在当前用户目录下创建配置文件夹。
 
-![image-20250203170903647](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203170903647.png)
+![image-20250203170903647](assets/image-20250203170903647.png)
 
 #### 开启功能
 
 开启敏感信息检查功能必须先导入 API，该功能仅对 API 列表中匹配的记录进行检查。
 
-![image-20250203214020393](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203214020393.png)
+![image-20250203214020393](assets/image-20250203214020393.png)
 
 导入 API 后，在 `Sensitive Info` 标签页勾选开启敏感信息检查。该勾选状态默认不勾选，状态不保存。
 
 初次启用功能由于配置文件不存在，会询问是否使用默认规则，选择是即可自动创建规则文件。
 
-![image-20250203214446338](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203214446338.png)
+![image-20250203214446338](assets/image-20250203214446338.png)
 
 插件自带规则均来自 HaE 插件部分敏感信息规则。
 
-![image-20250203214514020](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203214514020.png)
+![image-20250203214514020](assets/image-20250203214514020.png)
 
 #### 编辑规则
 
@@ -215,43 +215,43 @@ Java 版本不仅更好地与 BurpSuite 环境集成，而且通过减少第三�
 
 ##### 添加规则
 
-![image-20250203230445654](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203230445654.png)
+![image-20250203230445654](assets/image-20250203230445654.png)
 
-![image-20250203230544618](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203230544618.png)
+![image-20250203230544618](assets/image-20250203230544618.png)
 
 ##### 修改规则
 
-![image-20250203230640616](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203230640616.png)
+![image-20250203230640616](assets/image-20250203230640616.png)
 
-![image-20250203230657728](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203230657728.png)
+![image-20250203230657728](assets/image-20250203230657728.png)
 
-![image-20250203230720331](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203230720331.png)
+![image-20250203230720331](assets/image-20250203230720331.png)
 
 ##### 删除规则
 
 支持选中多条规则同时删除。
 
-![image-20250203231321030](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203231321030.png)
+![image-20250203231321030](assets/image-20250203231321030.png)
 
-![image-20250203231338677](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203231338677.png)
+![image-20250203231338677](assets/image-20250203231338677.png)
 
 ##### 切换规则启用状态
 
 支持选中多条规则同时切换状态，`true=启用`，`false=未启用`。
 
-![image-20250203231607512](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203231607512.png)
+![image-20250203231607512](assets/image-20250203231607512.png)
 
-![image-20250203231625954](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203231625954.png)
+![image-20250203231625954](assets/image-20250203231625954.png)
 
 #### 功能效果
 
 开启敏感信息检查后，当 API 列表中匹配到敏感信息时，`history` 中标记为 `红色`，同时列出匹配到的字段信息。
 
-![image-20250203232046025](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203232046025.png)
+![image-20250203232046025](assets/image-20250203232046025.png)
 
 同时 API 列表中 `Result` 字段提示 `存在敏感信息`。
 
-![image-20250203232232994](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250203232232994.png)
+![image-20250203232232994](assets/image-20250203232232994.png)
 
 ## 更新计划
 
