@@ -1,11 +1,8 @@
 package com.chave.ui;
 
-import burp.api.montoya.MontoyaApi;
 import burp.api.montoya.logging.Logging;
 import com.chave.Main;
-import lombok.Data;
 import lombok.Getter;
-
 import javax.swing.*;
 
 @Getter

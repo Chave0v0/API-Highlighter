@@ -6,7 +6,6 @@ import com.chave.config.SensitiveInfoConfig;
 import com.chave.pojo.RuleItem;
 import com.chave.utils.Util;
 import lombok.Getter;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;

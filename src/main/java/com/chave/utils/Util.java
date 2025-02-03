@@ -2,7 +2,6 @@ package com.chave.utils;
 
 import burp.api.montoya.core.Annotations;
 import burp.api.montoya.internal.ObjectFactoryLocator;
-import burp.api.montoya.logging.Logging;
 import com.chave.Main;
 import com.chave.config.APIConfig;
 import com.chave.config.SensitiveInfoConfig;
