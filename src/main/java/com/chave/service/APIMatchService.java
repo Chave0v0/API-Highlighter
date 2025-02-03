@@ -27,11 +27,8 @@ public class APIMatchService {
     public boolean exactMatch(HttpRequest request) {
 
         boolean isMatched = false;
-        String path = request.path();
-        // 当有get参数时 去除参数部分
-        if (path.contains("?")) {
-            path = path.split("\\?", 2)[0];
-        }
+        // 获取单纯的path
+        String path = request.pathWithoutQuery();
 
         for (APIItem apiItem : APIConfig.TARGET_API) {
             // 每次循环先赋值 便于找到匹配到的item位置
@@ -78,11 +75,10 @@ public class APIMatchService {
     public boolean semiFuzzMatch(HttpRequest request) {
         boolean isMatched = false;
         Pattern pattern = null;
-        String path = request.path();
-        // 当有get参数时 去除参数部分
-        if (path.contains("?")) {
-            path = path.split("\\?", 2)[0];
-        }
+
+        // 获取单纯的path
+        String path = request.pathWithoutQuery();
+
         for (APIItem apiItem : APIConfig.TARGET_API) {
             // 每次循环先赋值 便于找到匹配到的item位置
             MATCHED_ITEM = apiItem;

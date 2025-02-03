@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Getter
-public class HighlighterUI {
+public class HighlighterMainUI {
     private Logging log;
 
     // 定义相关组件
@@ -49,7 +49,7 @@ public class HighlighterUI {
     private JTextField apiSearchTextField;
 
 
-    public HighlighterUI() {
+    public HighlighterMainUI() {
         this.log = Main.API.logging();
         initHighlighterUI();
     }
@@ -434,7 +434,7 @@ public class HighlighterUI {
                                 }
 
                                 // 刷新列表
-                                Util.flushAPIList(Main.UI.getHighlighterUI().getApiTable());
+                                Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());
                             }
                         } else {
                             // 检查后如果没匹配到直接去除高亮

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 
 @Getter
-public class SensitiveInfoUI {
+public class SensitiveInfoMainUI {
     private Logging log;
 
     // 创建相关组件
@@ -38,7 +38,7 @@ public class SensitiveInfoUI {
     private JLabel ruleFileLabel;
     private JTable ruleTable;
 
-    public SensitiveInfoUI() {
+    public SensitiveInfoMainUI() {
         this.log = Main.API.logging();
         initSensitiveInfoUI();
     }

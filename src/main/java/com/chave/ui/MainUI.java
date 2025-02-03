@@ -9,8 +9,8 @@ import javax.swing.*;
 public class MainUI {
     private JTabbedPane mainTabbedPane = new JTabbedPane();
     private Logging log;
-    private HighlighterUI highlighterUI;
-    private SensitiveInfoUI sensitiveInfoUI;
+    private HighlighterMainUI highlighterMainUI;
+    private SensitiveInfoMainUI sensitiveInfoMainUI;
 
     public MainUI() {
         this.log = Main.API.logging();
@@ -19,10 +19,10 @@ public class MainUI {
 
     private void initUI() {
         // 创建各个组件ui实例
-        highlighterUI = new HighlighterUI();
-        sensitiveInfoUI = new SensitiveInfoUI();
+        highlighterMainUI = new HighlighterMainUI();
+        sensitiveInfoMainUI = new SensitiveInfoMainUI();
 
-        mainTabbedPane.add("Highlighter", highlighterUI.getHighlighterPanel());  // 添加高亮功能ui
-        mainTabbedPane.add("Sensitive Info", sensitiveInfoUI.getSensitiveInfoPanel());  // 添加敏感信息检查功能ui
+        mainTabbedPane.add("Highlighter", highlighterMainUI.getHighlighterPanel());  // 添加高亮功能ui
+        mainTabbedPane.add("Sensitive Info", sensitiveInfoMainUI.getSensitiveInfoPanel());  // 添加敏感信息检查功能ui
     }
 }

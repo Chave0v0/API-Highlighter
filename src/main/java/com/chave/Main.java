@@ -4,6 +4,8 @@ import burp.api.montoya.BurpExtension;
 import burp.api.montoya.MontoyaApi;
 import burp.api.montoya.logging.Logging;
 import com.chave.config.SensitiveInfoConfig;
+import com.chave.editor.RequestEditor;
+import com.chave.editor.ResponseEditor;
 import com.chave.handler.APIHighLighterHandler;
 import com.chave.ui.MainUI;
 
@@ -28,6 +30,8 @@ public class Main implements BurpExtension {
         UI = new MainUI();
         API.userInterface().registerSuiteTab("API Highlighter", UI.getMainTabbedPane());
         API.http().registerHttpHandler(new APIHighLighterHandler());
+        API.userInterface().registerHttpRequestEditorProvider(new RequestEditor());
+        API.userInterface().registerHttpResponseEditorProvider(new ResponseEditor());
 
         // 检查存放配置文件的目录是否存在，若不存在则创建目录
         File rule_dir = new File(SensitiveInfoConfig.RULE_CONFIG_DIR);

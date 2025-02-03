@@ -50,7 +50,7 @@ public class APIHighLighterHandler implements HttpHandler {
                     }
 
                     // 刷新列表
-                    Util.flushAPIList(Main.UI.getHighlighterUI().getApiTable());
+                    Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());
 
                 }
             }
@@ -77,7 +77,7 @@ public class APIHighLighterHandler implements HttpHandler {
                     }
 
                     // 刷新列表
-                    Util.flushAPIList(Main.UI.getHighlighterUI().getApiTable());
+                    Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());
 
                 }
             }
