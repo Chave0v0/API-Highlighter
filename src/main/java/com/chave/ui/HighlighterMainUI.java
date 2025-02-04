@@ -55,9 +55,6 @@ public class HighlighterMainUI {
     }
 
     private void initHighlighterUI() {
-        // 定义各种组件
-
-
 
         // 创建主面板并设置 BoxLayout 垂直排列
         highlighterPanel = new JPanel();
@@ -425,7 +422,7 @@ public class HighlighterMainUI {
                             HashMap responseResult = sensitiveInfoMatchService.sensitiveInfoMatch(response);
                             if (!requestResult.isEmpty() || !responseResult.isEmpty()) {
                                 // 对history进行红色高亮处理
-                                Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.RED);
+                                Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.ORANGE);
 
                                 if (APIMatchService.MATCHED_ITEM.getResult() != null && !APIMatchService.MATCHED_ITEM.getResult().contains("敏感信息")) {
                                     APIMatchService.MATCHED_ITEM.setResult(APIMatchService.MATCHED_ITEM.getResult() + "/存在敏感信息");

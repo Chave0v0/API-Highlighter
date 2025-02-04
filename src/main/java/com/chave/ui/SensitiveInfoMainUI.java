@@ -2,7 +2,6 @@ package com.chave.ui;
 
 import burp.api.montoya.logging.Logging;
 import com.chave.Main;
-import com.chave.config.APIConfig;
 import com.chave.config.SensitiveInfoConfig;
 import com.chave.pojo.RuleItem;
 import com.chave.utils.Util;
@@ -244,14 +243,6 @@ public class SensitiveInfoMainUI {
             JTextField regexTextField = new JTextField();
             String[] scopeOptions = {"any", "request", "response"};
             JComboBox scopeComboBox = new JComboBox(scopeOptions);
-
-            // 调整组件大小
-//            nameTextField.setMinimumSize(new Dimension(300, 25));
-//            nameTextField.setMaximumSize(new Dimension(300, 25));
-//            regexTextField.setMinimumSize(new Dimension(300, 25));
-//            regexTextField.setMaximumSize(new Dimension(300, 25));
-//            scopeComboBox.setMinimumSize(new Dimension(300, 25));
-//            scopeComboBox.setMaximumSize(new Dimension(300, 25));
 
             // 设置布局
             BoxLayout addRuleMainLayout = new BoxLayout(operateRuleMainPanel, BoxLayout.Y_AXIS);

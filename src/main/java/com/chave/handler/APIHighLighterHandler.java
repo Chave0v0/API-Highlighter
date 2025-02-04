@@ -41,7 +41,7 @@ public class APIHighLighterHandler implements HttpHandler {
                 HashMap result = sensitiveInfoMatchService.sensitiveInfoMatch(requestToBeSent);
                 if (!result.isEmpty()) {
                     // 对history进行红色高亮处理
-                    Util.setHighlightColor(requestToBeSent, Color.RED);
+                    Util.setHighlightColor(requestToBeSent, Color.ORANGE);
 
                     if (APIMatchService.MATCHED_ITEM.getResult() != null && !APIMatchService.MATCHED_ITEM.getResult().contains("敏感信息")) {
                         APIMatchService.MATCHED_ITEM.setResult(APIMatchService.MATCHED_ITEM.getResult() + "/存在敏感信息");
@@ -68,7 +68,7 @@ public class APIHighLighterHandler implements HttpHandler {
                 HashMap result = sensitiveInfoMatchService.sensitiveInfoMatch(responseReceived);
                 if (!result.isEmpty()) {
                     // 对history进行红色高亮处理
-                    Util.setHighlightColor(responseReceived, Color.RED);
+                    Util.setHighlightColor(responseReceived, Color.ORANGE);
 
                     if (APIMatchService.MATCHED_ITEM.getResult() != null && !APIMatchService.MATCHED_ITEM.getResult().contains("存在敏感信息")) {
                         APIMatchService.MATCHED_ITEM.setResult(APIMatchService.MATCHED_ITEM.getResult() + "/存在敏感信息");
