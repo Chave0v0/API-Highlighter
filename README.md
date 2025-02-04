@@ -245,9 +245,9 @@ Java 版本不仅更好地与 BurpSuite 环境集成，而且通过减少第三�
 
 #### 功能效果
 
-开启敏感信息检查后，当 API 列表中匹配到敏感信息时，`history` 中标记为 `红色`，同时列出匹配到的字段信息。
+开启敏感信息检查后，当 API 列表中匹配到敏感信息时，`history` 中标记为 `橙色`，同时列出匹配到的字段信息。
 
-![image-20250203232046025](assets/image-20250203232046025.png)
+![image-20250204203345613](/Users/chave/GitHubRepository/API-Highlighter/assets/image-20250204203345613.png)
 
 同时 API 列表中 `Result` 字段提示 `存在敏感信息`。
 
