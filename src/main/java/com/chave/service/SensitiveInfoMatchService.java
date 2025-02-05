@@ -26,11 +26,17 @@ public class SensitiveInfoMatchService {
             requestResult = new HashMap<>();
 
             for (RuleItem ruleItem : SensitiveInfoConfig.RULE_LIST) {
-                ArrayList<String> matchedData = new ArrayList<>();
+                // 如果规则未启用 直接跳过
+                if (!ruleItem.getLoaded()) {
+                    continue;
+                }
+
                 if (ruleItem.getScope().equals("response")) {
                     // 如果规则只检查response 在request这里直接跳过
                     continue;
                 }
+
+                ArrayList<String> matchedData = new ArrayList<>();
 
                 // 由于是敏感信息检查 替换掉\r\n方便匹配
                 String requestData = request.toString().replaceAll("\r\n", ",");
@@ -62,11 +68,17 @@ public class SensitiveInfoMatchService {
             responseResult = new HashMap<>();
 
             for (RuleItem ruleItem : SensitiveInfoConfig.RULE_LIST) {
-                ArrayList<String> matchedData = new ArrayList<>();
+                // 如果规则未启用 直接跳过
+                if (!ruleItem.getLoaded()) {
+                    continue;
+                }
+
                 if (ruleItem.getScope().equals("request")) {
                     // 如果规则只检查request 在response这里直接跳过
                     continue;
                 }
+
+                ArrayList<String> matchedData = new ArrayList<>();
 
                 // 由于是敏感信息检查 替换掉\r\n方便匹配
                 String responseData = response.toString().replaceAll("\r\n", ",");
