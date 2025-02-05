@@ -131,7 +131,7 @@ public class HighlighterMainUI {
         };
         apiTable = new JTable(model);
         apiTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  // 支持不连续的多行选择
-        // 禁止第三、五列表格编辑
+        // 禁止第三列表格编辑
         DefaultCellEditor disabledEditor = new DefaultCellEditor(new JTextField()) {
             @Override
             public boolean isCellEditable(EventObject anEvent) {
@@ -139,7 +139,6 @@ public class HighlighterMainUI {
             }
         };
         apiTable.getColumnModel().getColumn(2).setCellEditor(disabledEditor);
-        apiTable.getColumnModel().getColumn(5).setCellEditor(disabledEditor);
         // 设置第一列和第四列和第五列数据居中对齐
         TableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         ((DefaultTableCellRenderer) centerRenderer).setHorizontalAlignment(SwingConstants.CENTER);
@@ -405,14 +404,18 @@ public class HighlighterMainUI {
                 SensitiveInfoMatchService sensitiveInfoMatchService = new SensitiveInfoMatchService();
                 // 获取所有history
                 List<ProxyHttpRequestResponse> historyList = Main.API.proxy().history();
+                // 检查history先清空所有result和found状态  重新记录
+                for (APIItem apiItem : APIConfig.TARGET_API) {
+                    apiItem.setResult(null);
+                    apiItem.setIsFound(null);
+                }
                 for (ProxyHttpRequestResponse proxyHttpRequestResponse : historyList) {
                     // 获取要检查的request和response
                     HttpRequest request = proxyHttpRequestResponse.request();
                     HttpResponse response = proxyHttpRequestResponse.response();
                     // 遍历检查
                     try {
-                        Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
-                        HashMap apiMatchResult = (HashMap) matchMethod.invoke(apiMatchService, request);
+                        HashMap apiMatchResult = Util.getAPIMatchResult(request);
                         boolean isMatched = (boolean) apiMatchResult.get("isMatched");
                         APIItem matchedItem = (APIItem) apiMatchResult.get("api");
 
@@ -421,8 +424,8 @@ public class HighlighterMainUI {
                             // 匹配到进行高亮处理
                             Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.YELLOW);
 
-                            // 对匹配到的接口进行标记
-                            matchedItem.setIsFound("find");
+                            // 对匹配到的接口进行标记Found
+                            Util.setAPIFound(matchedItem.getPath(), request);
 
                             if (SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
                                 // 只对匹配到的接口进行敏感信息检查
@@ -432,11 +435,8 @@ public class HighlighterMainUI {
                                     // 对history进行红色高亮处理
                                     Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.ORANGE);
 
-                                    if (matchedItem.getResult() != null && !matchedItem.getResult().contains("敏感信息")) {
-                                        matchedItem.setResult(matchedItem.getResult() + "/存在敏感信息");
-                                    } else {
-                                        matchedItem.setResult("存在敏感信息");
-                                    }
+                                    // 标记result 存在敏感信息
+                                    Util.setAPIResult(APIConfig.SENSITIVE_INFO_RESULT, matchedItem.getPath(), request);
                                 }
                             }
 

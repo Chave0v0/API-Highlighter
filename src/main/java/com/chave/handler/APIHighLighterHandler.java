@@ -4,6 +4,7 @@ import burp.api.montoya.http.handler.*;
 import burp.api.montoya.http.message.requests.HttpRequest;
 import burp.api.montoya.logging.Logging;
 import com.chave.Main;
+import com.chave.config.APIConfig;
 import com.chave.config.Color;
 import com.chave.config.SensitiveInfoConfig;
 import com.chave.config.UserConfig;
@@ -30,8 +31,7 @@ public class APIHighLighterHandler implements HttpHandler {
     @Override
     public RequestToBeSentAction handleHttpRequestToBeSent(HttpRequestToBeSent requestToBeSent) {
         try {
-            Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
-            HashMap apiMatchResult = (HashMap) matchMethod.invoke(apiMatchService, requestToBeSent);
+            HashMap apiMatchResult = Util.getAPIMatchResult(requestToBeSent);
             boolean isMatched = (boolean) apiMatchResult.get("isMatched");
             APIItem matchedItem = (APIItem) apiMatchResult.get("api");
 
@@ -42,7 +42,7 @@ public class APIHighLighterHandler implements HttpHandler {
                 }
 
                 // 对匹配到的接口进行标记
-                matchedItem.setIsFound("find");
+                Util.setAPIFound(matchedItem.getPath(), requestToBeSent);
 
                 // 匹配到进行高亮处理
                 Util.setHighlightColor(requestToBeSent, Color.YELLOW);
@@ -54,11 +54,8 @@ public class APIHighLighterHandler implements HttpHandler {
                         // 对history进行红色高亮处理
                         Util.setHighlightColor(requestToBeSent, Color.ORANGE);
 
-                        if (matchedItem.getResult() != null && !matchedItem.getResult().contains("敏感信息")) {
-                            matchedItem.setResult(matchedItem.getResult() + "/存在敏感信息");
-                        } else {
-                            matchedItem.setResult("存在敏感信息");
-                        }
+                        // 标记result 存在敏感信息
+                        Util.setAPIResult(APIConfig.SENSITIVE_INFO_RESULT, matchedItem.getPath(), requestToBeSent);
 
                     }
                 }
@@ -88,16 +85,11 @@ public class APIHighLighterHandler implements HttpHandler {
                         Util.setHighlightColor(responseReceived, Color.ORANGE);
 
                         // 重新匹配一次 找到对应的apiItem
-                        Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
-                        HashMap apiMatchResult = (HashMap) matchMethod.invoke(apiMatchService, request);
+                        HashMap apiMatchResult = Util.getAPIMatchResult(request);
                         APIItem matchedItem = (APIItem) apiMatchResult.get("api");
 
-                        // 标记result
-                        if (matchedItem.getResult() != null && !matchedItem.getResult().contains("存在敏感信息")) {
-                            matchedItem.setResult(matchedItem.getResult() + "/存在敏感信息");
-                        } else {
-                            matchedItem.setResult("存在敏感信息");
-                        }
+                        // 标记result 存在敏感信息
+                        Util.setAPIResult(APIConfig.SENSITIVE_INFO_RESULT, matchedItem.getPath(), request);
 
                         // 刷新列表
                         Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());

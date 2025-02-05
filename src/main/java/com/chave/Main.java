@@ -22,7 +22,7 @@ public class Main implements BurpExtension {
         Logging log = API.logging();
 
         API.extension().setName("API Highlighter");
-        log.logToOutput("API Highlighter v1.0.0\n\n" +
+        log.logToOutput("API Highlighter v2.1.0\n\n" +
                 "Rebuild: Chave\n" +
                 "GitHub: https://github.com/Chave0v0/API-Highlighter\n");
 
@@ -30,6 +30,7 @@ public class Main implements BurpExtension {
         UI = new MainUI();
         API.userInterface().registerSuiteTab("API Highlighter", UI.getMainTabbedPane());
         API.http().registerHttpHandler(new APIHighLighterHandler());
+        // 添加敏感信息展示Tab
         API.userInterface().registerHttpRequestEditorProvider(new RequestEditor());
         API.userInterface().registerHttpResponseEditorProvider(new ResponseEditor());
 
