@@ -1,12 +1,15 @@
 package com.chave.utils;
 
 import burp.api.montoya.core.Annotations;
+import burp.api.montoya.http.message.requests.HttpRequest;
 import burp.api.montoya.internal.ObjectFactoryLocator;
 import com.chave.Main;
 import com.chave.config.APIConfig;
 import com.chave.config.SensitiveInfoConfig;
+import com.chave.config.UserConfig;
 import com.chave.pojo.APIItem;
 import com.chave.pojo.RuleItem;
+import com.chave.service.APIMatchService;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -48,12 +51,12 @@ public class Util {
         annotations.setHighlightColor(ObjectFactoryLocator.FACTORY.highlightColor(color));
     }
 
-    public static void flushAPIList(JTable table) {
+    public static synchronized void flushAPIList(JTable table) {
         // 修改之后刷新列表  防止数据不一致
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
         for (APIItem apiItem : APIConfig.TARGET_API) {
-            model.addRow(new Object[]{apiItem.getMethod(), apiItem.getPath(), apiItem.getResult(), apiItem.getState(), apiItem.getNote(), apiItem.getDomain()});
+            model.addRow(new Object[]{apiItem.getMethod(), apiItem.getPath(), apiItem.getResult(), apiItem.getState(), apiItem.getNote(), apiItem.getIsFound()});
         }
     }
 
@@ -81,6 +84,76 @@ public class Util {
         for (LinkedHashMap hashMap : arrayList) {
             RuleItem ruleItem = new RuleItem((String) hashMap.get("name"), (Boolean) hashMap.get("loaded"), (String) hashMap.get("regex"), (String) hashMap.get("scope"));
             SensitiveInfoConfig.RULE_LIST.add(ruleItem);
+        }
+    }
+
+    public static HashMap getAPIMatchResult(HttpRequest request) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
+        HashMap apiMatchResult = (HashMap) matchMethod.invoke(new APIMatchService(), request);
+        return apiMatchResult;
+    }
+
+    // 设置api找到状态
+    public static void setAPIFound(String path, HttpRequest request) {
+        ArrayList<APIItem> matchedItem = new ArrayList<>();
+        for (APIItem apiItem : APIConfig.TARGET_API) {
+            if (apiItem.getPath().equals(path)) {
+                matchedItem.add(apiItem);
+            }
+        }
+
+        if (UserConfig.IS_CHECK_HTTP_METHOD) {
+            for (APIItem apiItem : matchedItem) {
+                if (apiItem.getMethod() == null) {
+                    apiItem.setIsFound("Found");
+                } else {
+                    if (apiItem.getMethod().equalsIgnoreCase(request.method())) {
+                        apiItem.setIsFound("Found");
+                    }
+                }
+            }
+        } else {
+            for (APIItem apiItem : matchedItem) {
+                apiItem.setIsFound("Found");
+            }
+        }
+    }
+
+    // 设置APIItem result
+    public static void setAPIResult(String result, String path, HttpRequest request) {
+        ArrayList<APIItem> matchedItem = new ArrayList<>();
+        for (APIItem apiItem : APIConfig.TARGET_API) {
+            if (apiItem.getPath().equals(path)) {
+                matchedItem.add(apiItem);
+            }
+        }
+
+        if (UserConfig.IS_CHECK_HTTP_METHOD) {
+            for (APIItem apiItem : matchedItem) {
+                if (apiItem.getMethod() == null) {
+                    if (apiItem.getResult() != null && !apiItem.getResult().contains(result)) {
+                        apiItem.setResult(apiItem.getResult() + "/" + result);
+                    } else {
+                        apiItem.setResult(result);
+                    }
+                } else {
+                    if (apiItem.getMethod().equalsIgnoreCase(request.method())) {
+                        if (apiItem.getResult() != null && !apiItem.getResult().contains(result)) {
+                            apiItem.setResult(apiItem.getResult() + "/" + result);
+                        } else {
+                            apiItem.setResult(result);
+                        }
+                    }
+                }
+            }
+        } else {
+            for (APIItem apiItem : matchedItem) {
+                if (apiItem.getResult() != null && !apiItem.getResult().contains(result)) {
+                    apiItem.setResult(apiItem.getResult() + "/" + result);
+                } else {
+                    apiItem.setResult(result);
+                }
+            }
         }
     }
 

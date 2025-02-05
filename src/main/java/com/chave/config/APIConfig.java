@@ -9,13 +9,15 @@ public class APIConfig {
 
     public static final HashMap ITEM_FIELD = new HashMap();
 
+    public static final String SENSITIVE_INFO_RESULT = "存在敏感信息";
+
     static {
         ITEM_FIELD.put(0, "method");
         ITEM_FIELD.put(1, "path");
         ITEM_FIELD.put(2, "result");
         ITEM_FIELD.put(3, "state");
         ITEM_FIELD.put(4, "note");
-        ITEM_FIELD.put(5, "domain");
+        ITEM_FIELD.put(5, "isFound");
     }
 
 }

@@ -8,9 +8,8 @@ import burp.api.montoya.ui.editor.extension.ExtensionProvidedHttpRequestEditor;
 import burp.api.montoya.ui.editor.extension.HttpRequestEditorProvider;
 import com.chave.Main;
 import com.chave.config.SensitiveInfoConfig;
-import com.chave.config.UserConfig;
-import com.chave.service.APIMatchService;
 import com.chave.service.SensitiveInfoMatchService;
+import com.chave.utils.Util;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -18,7 +17,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -32,7 +30,6 @@ public class RequestEditor implements HttpRequestEditorProvider {
     private static class Editor implements ExtensionProvidedHttpRequestEditor {
         private HttpRequestResponse requestResponse;
         private final JTabbedPane jTabbedPane = new JTabbedPane();
-        private APIMatchService apiMatchService = new APIMatchService();
         private SensitiveInfoMatchService sensitiveInfoMatchService = new SensitiveInfoMatchService();
 
         public Editor() {
@@ -52,8 +49,9 @@ public class RequestEditor implements HttpRequestEditorProvider {
         public boolean isEnabledFor(HttpRequestResponse requestResponse) {
             HttpRequest request = requestResponse.request();
             try {
-                Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
-                if ((Boolean) matchMethod.invoke(apiMatchService, request) && SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
+                HashMap apiMatchResult = Util.getAPIMatchResult(request);
+                boolean isMatched = (boolean) apiMatchResult.get("isMatched");
+                if (isMatched && SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
                     HashMap result = sensitiveInfoMatchService.sensitiveInfoMatch(request);
                     if (!result.isEmpty()) {
                         genreateEditorUI(result);
