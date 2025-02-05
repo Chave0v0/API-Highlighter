@@ -6,7 +6,6 @@ import burp.api.montoya.logging.Logging;
 import com.chave.Main;
 import com.chave.config.SensitiveInfoConfig;
 import com.chave.pojo.RuleItem;
-import com.chave.utils.Util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;

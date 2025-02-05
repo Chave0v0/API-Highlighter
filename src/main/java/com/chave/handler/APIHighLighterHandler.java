@@ -7,12 +7,10 @@ import com.chave.Main;
 import com.chave.config.APIConfig;
 import com.chave.config.Color;
 import com.chave.config.SensitiveInfoConfig;
-import com.chave.config.UserConfig;
 import com.chave.pojo.APIItem;
 import com.chave.service.APIMatchService;
 import com.chave.service.SensitiveInfoMatchService;
 import com.chave.utils.Util;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class APIHighLighterHandler implements HttpHandler {

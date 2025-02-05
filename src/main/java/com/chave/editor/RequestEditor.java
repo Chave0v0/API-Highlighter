@@ -8,9 +8,6 @@ import burp.api.montoya.ui.editor.extension.ExtensionProvidedHttpRequestEditor;
 import burp.api.montoya.ui.editor.extension.HttpRequestEditorProvider;
 import com.chave.Main;
 import com.chave.config.SensitiveInfoConfig;
-import com.chave.config.UserConfig;
-import com.chave.pojo.APIItem;
-import com.chave.service.APIMatchService;
 import com.chave.service.SensitiveInfoMatchService;
 import com.chave.utils.Util;
 
@@ -20,7 +17,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
