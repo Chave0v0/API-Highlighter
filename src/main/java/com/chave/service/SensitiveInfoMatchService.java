@@ -22,61 +22,70 @@ public class SensitiveInfoMatchService {
     }
 
     public HashMap sensitiveInfoMatch(HttpRequest request) {
-        // 每次调用初始化一个result
-        requestResult = new HashMap<>();
+        try {
+            // 每次调用初始化一个result
+            requestResult = new HashMap<>();
 
-        for (RuleItem ruleItem : SensitiveInfoConfig.RULE_LIST) {
-            ArrayList<String> matchedData = new ArrayList<>();
-            if (ruleItem.getScope().equals("response")) {
-                // 如果规则只检查response 在request这里直接跳过
-                continue;
+            for (RuleItem ruleItem : SensitiveInfoConfig.RULE_LIST) {
+                ArrayList<String> matchedData = new ArrayList<>();
+                if (ruleItem.getScope().equals("response")) {
+                    // 如果规则只检查response 在request这里直接跳过
+                    continue;
+                }
+
+                // 由于是敏感信息检查 替换掉\r\n方便匹配
+                String requestData = request.toString().replaceAll("\r\n", ",");
+
+                Pattern pattern = Pattern.compile(ruleItem.getRegex());
+                Matcher matcher = pattern.matcher(requestData);
+
+                while (matcher.find()) {
+                    matchedData.add(matcher.group());
+                }
+
+                // 匹配到了才往result中加数据
+                if (matchedData.size() > 0) {
+                    requestResult.put(ruleItem.getName(), matchedData);
+                }
             }
-
-            // 由于是敏感信息检查 直接url解码一次 替换掉\r\n方便匹配
-            String requestData = Util.urlDecode(request.toString()).replaceAll("\r\n", ",");
-
-            Pattern pattern = Pattern.compile(ruleItem.getRegex());
-            Matcher matcher = pattern.matcher(requestData);
-
-            while (matcher.find()) {
-                matchedData.add(matcher.group());
-            }
-
-            // 匹配到了才往result中加数据
-            if (matchedData.size() > 0) {
-                requestResult.put(ruleItem.getName(), matchedData);
-            }
+        } catch (NullPointerException nullPointerException) {
+            // 空指针会在未开启敏感信息检查时出现 预期内异常 暂不做处理
         }
+
 
         return requestResult;
     }
 
 
     public HashMap sensitiveInfoMatch(HttpResponse response) {
-        // 每次调用初始化一个result
-        responseResult = new HashMap<>();
+        try {
+            // 每次调用初始化一个result
+            responseResult = new HashMap<>();
 
-        for (RuleItem ruleItem : SensitiveInfoConfig.RULE_LIST) {
-            ArrayList<String> matchedData = new ArrayList<>();
-            if (ruleItem.getScope().equals("request")) {
-                // 如果规则只检查request 在response这里直接跳过
-                continue;
+            for (RuleItem ruleItem : SensitiveInfoConfig.RULE_LIST) {
+                ArrayList<String> matchedData = new ArrayList<>();
+                if (ruleItem.getScope().equals("request")) {
+                    // 如果规则只检查request 在response这里直接跳过
+                    continue;
+                }
+
+                // 由于是敏感信息检查 替换掉\r\n方便匹配
+                String responseData = response.toString().replaceAll("\r\n", ",");
+
+                Pattern pattern = Pattern.compile(ruleItem.getRegex());
+                Matcher matcher = pattern.matcher(responseData);
+
+                while (matcher.find()) {
+                    matchedData.add(matcher.group());
+                }
+
+                // 匹配到了才往result中加数据
+                if (matchedData.size() > 0) {
+                    responseResult.put(ruleItem.getName(), matchedData);
+                }
             }
-
-            // 由于是敏感信息检查 直接url解码一次 替换掉\r\n方便匹配
-            String responseData = Util.urlDecode(response.toString()).replaceAll("\r\n", ",");
-
-            Pattern pattern = Pattern.compile(ruleItem.getRegex());
-            Matcher matcher = pattern.matcher(responseData);
-
-            while (matcher.find()) {
-                matchedData.add(matcher.group());
-            }
-
-            // 匹配到了才往result中加数据
-            if (matchedData.size() > 0) {
-                responseResult.put(ruleItem.getName(), matchedData);
-            }
+        } catch (NullPointerException nullPointerException) {
+            // 空指针会在未开启敏感信息检查时出现 预期内异常 暂不做处理
         }
 
         return responseResult;

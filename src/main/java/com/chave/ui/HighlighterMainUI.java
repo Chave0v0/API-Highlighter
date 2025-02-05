@@ -6,6 +6,7 @@ import burp.api.montoya.logging.Logging;
 import burp.api.montoya.proxy.ProxyHttpRequestResponse;
 import com.chave.Main;
 import com.chave.config.APIConfig;
+import com.chave.config.SensitiveInfoConfig;
 import com.chave.config.UserConfig;
 import com.chave.pojo.APIItem;
 import com.chave.pojo.MatchMod;
@@ -13,7 +14,6 @@ import com.chave.service.APIMatchService;
 import com.chave.service.SensitiveInfoMatchService;
 import com.chave.utils.Util;
 import lombok.Getter;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
@@ -122,7 +122,7 @@ public class HighlighterMainUI {
 
 
         // 创建api列表
-        String[] columnName = {"Method", "Path", "Result", "State", "Note", "Domain"};
+        String[] columnName = {"Method", "Path", "Result", "State", "Note", "IsFound"};
         DefaultTableModel model = new DefaultTableModel(columnName, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -131,7 +131,7 @@ public class HighlighterMainUI {
         };
         apiTable = new JTable(model);
         apiTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);  // 支持不连续的多行选择
-        // 禁止第二列表格编辑
+        // 禁止第三、五列表格编辑
         DefaultCellEditor disabledEditor = new DefaultCellEditor(new JTextField()) {
             @Override
             public boolean isCellEditable(EventObject anEvent) {
@@ -139,11 +139,13 @@ public class HighlighterMainUI {
             }
         };
         apiTable.getColumnModel().getColumn(2).setCellEditor(disabledEditor);
-        // 设置第一列（索引0）和第四列（索引3）数据居中对齐
+        apiTable.getColumnModel().getColumn(5).setCellEditor(disabledEditor);
+        // 设置第一列和第四列和第五列数据居中对齐
         TableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         ((DefaultTableCellRenderer) centerRenderer).setHorizontalAlignment(SwingConstants.CENTER);
         apiTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         apiTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        apiTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
         // 设置表头背景
         JTableHeader apiTableHeader = apiTable.getTableHeader();
         apiTableHeader.setBackground(new Color(215, 215, 215));
@@ -349,7 +351,7 @@ public class HighlighterMainUI {
                     // 由于添加数据时也会触发该监听器，这里捕获添加多行数据时抛出的异常 不做处理
                 } catch (Exception exception) {
                     // 捕获预期外的异常
-                    log.logToError(exception);
+                    log.logToError("修改表格出现异常");
                 }
 
             }
@@ -410,35 +412,43 @@ public class HighlighterMainUI {
                     // 遍历检查
                     try {
                         Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
+                        HashMap apiMatchResult = (HashMap) matchMethod.invoke(apiMatchService, request);
+                        boolean isMatched = (boolean) apiMatchResult.get("isMatched");
+                        APIItem matchedItem = (APIItem) apiMatchResult.get("api");
 
                         // 匹配到进行高亮
-                        if ((Boolean) matchMethod.invoke(apiMatchService, request)) {
+                        if (isMatched) {
                             // 匹配到进行高亮处理
                             Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.YELLOW);
 
-                            // 后续这里可以添加HaE规则
-                            // 只对匹配到的接口进行敏感信息检查
-                            HashMap requestResult = sensitiveInfoMatchService.sensitiveInfoMatch(request);
-                            HashMap responseResult = sensitiveInfoMatchService.sensitiveInfoMatch(response);
-                            if (!requestResult.isEmpty() || !responseResult.isEmpty()) {
-                                // 对history进行红色高亮处理
-                                Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.ORANGE);
+                            // 对匹配到的接口进行标记
+                            matchedItem.setIsFound("find");
 
-                                if (APIMatchService.MATCHED_ITEM.getResult() != null && !APIMatchService.MATCHED_ITEM.getResult().contains("敏感信息")) {
-                                    APIMatchService.MATCHED_ITEM.setResult(APIMatchService.MATCHED_ITEM.getResult() + "/存在敏感信息");
-                                } else {
-                                    APIMatchService.MATCHED_ITEM.setResult("存在敏感信息");
+                            if (SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
+                                // 只对匹配到的接口进行敏感信息检查
+                                HashMap requestResult = sensitiveInfoMatchService.sensitiveInfoMatch(request);
+                                HashMap responseResult = sensitiveInfoMatchService.sensitiveInfoMatch(response);
+                                if (!requestResult.isEmpty() || !responseResult.isEmpty()) {
+                                    // 对history进行红色高亮处理
+                                    Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.ORANGE);
+
+                                    if (matchedItem.getResult() != null && !matchedItem.getResult().contains("敏感信息")) {
+                                        matchedItem.setResult(matchedItem.getResult() + "/存在敏感信息");
+                                    } else {
+                                        matchedItem.setResult("存在敏感信息");
+                                    }
                                 }
-
-                                // 刷新列表
-                                Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());
                             }
+
+                            // 刷新列表
+                            Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());
                         } else {
                             // 检查后如果没匹配到直接去除高亮
                             Util.setHighlightColor(proxyHttpRequestResponse, com.chave.config.Color.NONE);
                         }
                     } catch (Exception exception) {
-                        log.logToError(exception);
+                        log.logToError("检查history中存在异常");
+                        continue;
                     }
                 }
             }

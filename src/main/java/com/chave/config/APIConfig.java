@@ -15,7 +15,7 @@ public class APIConfig {
         ITEM_FIELD.put(2, "result");
         ITEM_FIELD.put(3, "state");
         ITEM_FIELD.put(4, "note");
-        ITEM_FIELD.put(5, "domain");
+        ITEM_FIELD.put(5, "isFound");
     }
 
 }

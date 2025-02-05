@@ -9,6 +9,7 @@ import burp.api.montoya.ui.editor.extension.HttpRequestEditorProvider;
 import com.chave.Main;
 import com.chave.config.SensitiveInfoConfig;
 import com.chave.config.UserConfig;
+import com.chave.pojo.APIItem;
 import com.chave.service.APIMatchService;
 import com.chave.service.SensitiveInfoMatchService;
 
@@ -53,7 +54,9 @@ public class RequestEditor implements HttpRequestEditorProvider {
             HttpRequest request = requestResponse.request();
             try {
                 Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
-                if ((Boolean) matchMethod.invoke(apiMatchService, request) && SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
+                HashMap apiMatchResult = (HashMap) matchMethod.invoke(apiMatchService, request);
+                boolean isMatched = (boolean) apiMatchResult.get("isMatched");
+                if (isMatched && SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
                     HashMap result = sensitiveInfoMatchService.sensitiveInfoMatch(request);
                     if (!result.isEmpty()) {
                         genreateEditorUI(result);

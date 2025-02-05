@@ -17,7 +17,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +54,9 @@ public class ResponseEditor implements HttpResponseEditorProvider {
             HttpRequest request = requestResponse.request();
             try {
                 Method matchMethod = APIMatchService.class.getMethod(UserConfig.MATCH_MOD.name(), HttpRequest.class);
-                if ((Boolean) matchMethod.invoke(apiMatchService, request) && SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
+                HashMap apiMatchResult = (HashMap) matchMethod.invoke(apiMatchService, request);
+                boolean isMatched = (boolean) apiMatchResult.get("isMatched");
+                if (isMatched && SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
                     HashMap result = sensitiveInfoMatchService.sensitiveInfoMatch(response);
                     if (!result.isEmpty()) {
                         genreateEditorUI(result);

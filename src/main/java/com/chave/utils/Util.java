@@ -48,12 +48,12 @@ public class Util {
         annotations.setHighlightColor(ObjectFactoryLocator.FACTORY.highlightColor(color));
     }
 
-    public static void flushAPIList(JTable table) {
+    public static synchronized void flushAPIList(JTable table) {
         // 修改之后刷新列表  防止数据不一致
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
         for (APIItem apiItem : APIConfig.TARGET_API) {
-            model.addRow(new Object[]{apiItem.getMethod(), apiItem.getPath(), apiItem.getResult(), apiItem.getState(), apiItem.getNote(), apiItem.getDomain()});
+            model.addRow(new Object[]{apiItem.getMethod(), apiItem.getPath(), apiItem.getResult(), apiItem.getState(), apiItem.getNote(), apiItem.getIsFound()});
         }
     }
 

@@ -13,7 +13,7 @@ public class APIItem {
     private String result;
     private Boolean state = Boolean.FALSE;
     private String note;
-    private String domain;
+    private String isFound;
 
     public APIItem(String path) {
         this.path = path;
