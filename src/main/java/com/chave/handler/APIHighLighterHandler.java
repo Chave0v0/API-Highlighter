@@ -8,20 +8,17 @@ import com.chave.config.APIConfig;
 import com.chave.config.Color;
 import com.chave.config.SensitiveInfoConfig;
 import com.chave.pojo.APIItem;
-import com.chave.service.APIMatchService;
 import com.chave.service.SensitiveInfoMatchService;
 import com.chave.utils.Util;
 import java.util.HashMap;
 
 public class APIHighLighterHandler implements HttpHandler {
     private Logging log;
-    private APIMatchService apiMatchService;
     private SensitiveInfoMatchService sensitiveInfoMatchService;
     private HashMap<Integer, HttpRequest> messageIdList;
 
     public APIHighLighterHandler() {
         this.log = Main.API.logging();
-        this.apiMatchService = new APIMatchService();
         this.sensitiveInfoMatchService = new SensitiveInfoMatchService();
         this.messageIdList = new HashMap<>();
     }
