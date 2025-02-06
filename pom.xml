@@ -25,7 +25,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.obsec.Main</mainClass>
+                            <mainClass>com.chave.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
