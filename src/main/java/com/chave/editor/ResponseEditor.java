@@ -9,13 +9,13 @@ import com.chave.Main;
 import com.chave.config.SensitiveInfoConfig;
 import com.chave.service.SensitiveInfoMatchService;
 import com.chave.utils.Util;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -49,6 +49,12 @@ public class ResponseEditor implements HttpResponseEditorProvider {
         public boolean isEnabledFor(HttpRequestResponse requestResponse) {
             HttpResponse response = requestResponse.response();
             HttpRequest request = requestResponse.request();
+
+            // 防止空指针
+            if (response == null || request == null) {
+                return false;
+            }
+
             try {
                 HashMap apiMatchResult = Util.getAPIMatchResult(request);
                 boolean isMatched = (boolean) apiMatchResult.get("isMatched");
@@ -61,9 +67,10 @@ public class ResponseEditor implements HttpResponseEditorProvider {
                 } else {
                     return false;
                 }
+            } catch (InvocationTargetException invocationTargetException) {
+                // 预期内异常
             } catch (Exception e) {
                 Main.API.logging().logToError(e);
-                return false;
             }
             return false;
         }

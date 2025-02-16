@@ -7,7 +7,6 @@ import com.chave.config.APIConfig;
 import com.chave.config.UserConfig;
 import com.chave.pojo.APIItem;
 import com.chave.utils.Util;
-
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +49,7 @@ public class APIMatchService {
                 }
             } else {
                 // 处理有 PathVariable 的情况
-                Pattern pattern = Pattern.compile("^" + Util.convertPathToRegex(apiItem.getPath()) + "$");
+                Pattern pattern = Pattern.compile("^" + Util.convertPathToRegex(apiItem.getPath()) + "$", Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(path);
                 if (isMatched = matcher.matches()) {
                     if (UserConfig.IS_CHECK_HTTP_METHOD && apiItem.getMethod() != null) {
@@ -95,14 +94,14 @@ public class APIMatchService {
 
             try {
                 // 声明没有 PathVariable 情况下的正则
-                pattern = Pattern.compile("^(/[^/]+)?" + apiItem.getPath() + "(/.*)?$");
+                pattern = Pattern.compile("^(/[^/]+)?" + apiItem.getPath() + "(/.*)?$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
                 // 如果正则编译捕获异常,并且有"{",认为是有PathVariable的情况，重新生成正则。
                 if (apiItem.getPath().contains("{")) {
-                    pattern = Pattern.compile("^(/[^/]+)?" + Util.convertPathToRegex(apiItem.getPath()) + "(/.*)?$");
+                    pattern = Pattern.compile("^(/[^/]+)?" + Util.convertPathToRegex(apiItem.getPath()) + "(/.*)?$", Pattern.CASE_INSENSITIVE);
                 } else {
                     // 其他情况认为是预期外的异常，直接输出log
-                    log.logToError(e);
+                    log.logToError("半精确匹配出现异常" + e.getCause());
                 }
             }
 
@@ -146,9 +145,9 @@ public class APIMatchService {
             }
 
             if (UserConfig.IS_ANALYZE_PATHVARIABLE) {
-                pattern = Pattern.compile(".*" + Util.convertPathToRegex(apiItem.getPath()) + ".*");
+                pattern = Pattern.compile(".*" + Util.convertPathToRegex(apiItem.getPath()) + ".*", Pattern.CASE_INSENSITIVE);
             } else {
-                pattern = Pattern.compile(".*" + Pattern.quote(apiItem.getPath()) + ".*");
+                pattern = Pattern.compile(".*" + Pattern.quote(apiItem.getPath()) + ".*", Pattern.CASE_INSENSITIVE);
             }
 
 

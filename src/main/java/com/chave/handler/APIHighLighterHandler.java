@@ -1,5 +1,6 @@
 package com.chave.handler;
 
+import burp.api.montoya.core.ToolType;
 import burp.api.montoya.http.handler.*;
 import burp.api.montoya.http.message.requests.HttpRequest;
 import burp.api.montoya.logging.Logging;
@@ -26,43 +27,43 @@ public class APIHighLighterHandler implements HttpHandler {
     @Override
     public RequestToBeSentAction handleHttpRequestToBeSent(HttpRequestToBeSent requestToBeSent) {
         try {
-            HashMap apiMatchResult = Util.getAPIMatchResult(requestToBeSent);
-            boolean isMatched = (boolean) apiMatchResult.get("isMatched");
-            APIItem matchedItem = (APIItem) apiMatchResult.get("api");
+            // 只监听来自proxy与repeter的流量 减小检测量
+            if (requestToBeSent.toolSource().isFromTool(ToolType.PROXY) || requestToBeSent.toolSource().isFromTool(ToolType.REPEATER)) {
+                HashMap apiMatchResult = Util.getAPIMatchResult(requestToBeSent);
+                boolean isMatched = (boolean) apiMatchResult.get("isMatched");
+                APIItem matchedItem = (APIItem) apiMatchResult.get("api");
 
-            if (isMatched) {
-                // 添加到arraylist中 为了检查对应response
-                if (messageIdList.get(requestToBeSent.messageId()) == null) {
-                    messageIdList.put(requestToBeSent.messageId(), requestToBeSent);
-                }
-
-                // 对匹配到的接口进行标记
-                Util.setAPIFound(matchedItem.getPath(), requestToBeSent);
-
-                // 匹配到进行高亮处理
-                Util.setHighlightColor(requestToBeSent, Color.YELLOW);
-
-                if (SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
-                    // 只对匹配到的接口进行敏感信息检查
-                    HashMap sensitiveInfoMatchResult = sensitiveInfoMatchService.sensitiveInfoMatch(requestToBeSent);
-                    if (!sensitiveInfoMatchResult.isEmpty()) {
-                        // 对history进行红色高亮处理
-                        Util.setHighlightColor(requestToBeSent, Color.ORANGE);
-
-                        // 标记result 存在敏感信息
-                        Util.setAPIResult(APIConfig.SENSITIVE_INFO_RESULT, matchedItem.getPath(), requestToBeSent);
-
+                if (isMatched) {
+                    // 添加到arraylist中 为了检查对应response
+                    if (messageIdList.get(requestToBeSent.messageId()) == null) {
+                        messageIdList.put(requestToBeSent.messageId(), requestToBeSent);
                     }
+
+                    // 对匹配到的接口进行标记
+                    Util.setAPIFound(matchedItem.getPath(), requestToBeSent);
+
+                    // 匹配到进行高亮处理
+                    Util.setHighlightColor(requestToBeSent, Color.YELLOW);
+
+                    if (SensitiveInfoConfig.IS_CHECK_SENSITIVE_INFO) {
+                        // 只对匹配到的接口进行敏感信息检查
+                        HashMap sensitiveInfoMatchResult = sensitiveInfoMatchService.sensitiveInfoMatch(requestToBeSent);
+                        if (!sensitiveInfoMatchResult.isEmpty()) {
+                            // 对history进行红色高亮处理
+                            Util.setHighlightColor(requestToBeSent, Color.ORANGE);
+                            // 标记result 存在敏感信息
+                            Util.setAPIResult(APIConfig.SENSITIVE_INFO_RESULT, matchedItem.getPath(), requestToBeSent);
+                        }
+                    }
+
+                    // 刷新列表
+                    Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());
                 }
-
-
-                // 刷新列表
-                Util.flushAPIList(Main.UI.getHighlighterMainUI().getApiTable());
             }
-
         } catch (Exception e) {
             log.logToError("request handler异常");
         }
+
         return null;
     }
 
