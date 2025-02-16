@@ -8,7 +8,6 @@ import com.chave.editor.RequestEditor;
 import com.chave.editor.ResponseEditor;
 import com.chave.handler.APIHighLighterHandler;
 import com.chave.ui.MainUI;
-
 import java.io.*;
 
 public class Main implements BurpExtension {
@@ -22,7 +21,7 @@ public class Main implements BurpExtension {
         Logging log = API.logging();
 
         API.extension().setName("API Highlighter");
-        log.logToOutput("API Highlighter v2.1.0\n\n" +
+        log.logToOutput("API Highlighter v2.1.1\n\n" +
                 "Rebuild: Chave\n" +
                 "GitHub: https://github.com/Chave0v0/API-Highlighter\n");
 

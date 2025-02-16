@@ -213,15 +213,15 @@ public class HighlighterMainUI {
                         try {
                             APIItem item;
                             if (method == null) {
-                                item = new APIItem(path.toLowerCase());
+                                item = new APIItem(path);
                             } else {
-                                item = new APIItem(method.toUpperCase(), path.toLowerCase());
+                                item = new APIItem(method.toUpperCase(), path);
                             }
                             if (!Util.checkAPIItemExist(item)) {
                                 APIConfig.TARGET_API.add(item);
                             }
                         } catch (Exception exception) {
-                            log.logToError(exception);
+                            log.logToError("导入api出现异常" + exception.getCause());
                             continue;
                         }
 
@@ -232,7 +232,7 @@ public class HighlighterMainUI {
                         }
 
                         try {
-                            APIItem item = new APIItem(line.trim().toLowerCase());
+                            APIItem item = new APIItem(line.trim());
                             if (!Util.checkAPIItemExist(item)) {
                                 APIConfig.TARGET_API.add(item);
                             }
@@ -250,7 +250,7 @@ public class HighlighterMainUI {
                     userInputTextArea.setText("");
                     Util.flushAPIList(apiTable);
                 } catch (Exception exception) {
-                    System.out.println(exception);
+                    log.logToError("导入api后刷新异常" + exception.getCause());
                 }
 
             }
