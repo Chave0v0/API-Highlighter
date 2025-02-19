@@ -94,11 +94,11 @@ public class APIMatchService {
 
             try {
                 // 声明没有 PathVariable 情况下的正则
-                pattern = Pattern.compile("^(/[^/]+)?" + apiItem.getPath() + "(/.*)?$", Pattern.CASE_INSENSITIVE);
+                pattern = Pattern.compile("^(/[^/]+)*" + apiItem.getPath() + "(/.*)?$", Pattern.CASE_INSENSITIVE);
             } catch (Exception e) {
                 // 如果正则编译捕获异常,并且有"{",认为是有PathVariable的情况，重新生成正则。
                 if (apiItem.getPath().contains("{")) {
-                    pattern = Pattern.compile("^(/[^/]+)?" + Util.convertPathToRegex(apiItem.getPath()) + "(/.*)?$", Pattern.CASE_INSENSITIVE);
+                    pattern = Pattern.compile("^(/[^/]+)*" + Util.convertPathToRegex(apiItem.getPath()) + "(/.*)?$", Pattern.CASE_INSENSITIVE);
                 } else {
                     // 其他情况认为是预期外的异常，直接输出log
                     log.logToError("半精确匹配出现异常" + e.getCause());
