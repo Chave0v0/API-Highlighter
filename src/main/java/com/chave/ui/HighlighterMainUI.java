@@ -406,8 +406,10 @@ public class HighlighterMainUI {
                 List<ProxyHttpRequestResponse> historyList = Main.API.proxy().history();
                 // 检查history先清空所有result和found状态  重新记录
                 for (APIItem apiItem : APIConfig.TARGET_API) {
-                    apiItem.setResult(null);
-                    apiItem.setIsFound(null);
+                    if (apiItem.getState().equals(Boolean.FALSE)) {  // 仅重置未测试完成的接口result、IsFound信息
+                        apiItem.setResult(null);
+                        apiItem.setIsFound(null);
+                    }
                 }
                 for (ProxyHttpRequestResponse proxyHttpRequestResponse : historyList) {
                     // 获取要检查的request和response
